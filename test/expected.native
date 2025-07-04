@@ -37,38 +37,86 @@ Pandoc
                     [ RawBlock (Format "latex") "\\moderncvcolor{blue}"
                     ]
                 , MetaBlocks
-                    [ RawBlock
-                        (Format "latex") "\\name{Dr.\160Jane Smith}{}"
+                    [ Para
+                        [ RawInline (Format "latex") "\\name{"
+                        , Emph [ Str "Dr." ]
+                        , Space
+                        , Str "Jane"
+                        , Space
+                        , Str "Smith"
+                        , RawInline (Format "latex") "}{}"
+                        ]
                     ]
                 , MetaBlocks
-                    [ RawBlock
-                        (Format "latex") "\\title{Curriculum Vitae}"
+                    [ Para
+                        [ RawInline (Format "latex") "\\title{"
+                        , Str "Curriculum"
+                        , Space
+                        , Str "Vitae"
+                        , RawInline (Format "latex") "}"
+                        ]
                     ]
                 , MetaBlocks
-                    [ RawBlock
-                        (Format "latex")
-                        "\\address{456 Research Blvd, Academic City, AC 12345}"
+                    [ Para
+                        [ RawInline (Format "latex") "\\address{"
+                        , Str "456"
+                        , Space
+                        , Str "Research"
+                        , Space
+                        , Str "Blvd,"
+                        , Space
+                        , Str "Academic"
+                        , Space
+                        , Str "City,"
+                        , Space
+                        , Str "AC"
+                        , Space
+                        , Str "12345"
+                        , RawInline (Format "latex") "}"
+                        ]
                     ]
                 , MetaBlocks
-                    [ RawBlock
-                        (Format "latex") "\\phone{+1 555 123 4567}"
+                    [ Para
+                        [ RawInline (Format "latex") "\\phone{"
+                        , Str "+1"
+                        , Space
+                        , Str "555"
+                        , Space
+                        , Str "123"
+                        , Space
+                        , Str "4567"
+                        , RawInline (Format "latex") "}"
+                        ]
                     ]
                 , MetaBlocks
-                    [ RawBlock
-                        (Format "latex")
-                        "\\email{jane.smith@university.edu}"
+                    [ Para
+                        [ RawInline (Format "latex") "\\email{"
+                        , Str "jane.smith@university.edu"
+                        , RawInline (Format "latex") "}"
+                        ]
                     ]
                 , MetaBlocks
-                    [ RawBlock
-                        (Format "latex")
-                        "\\homepage{https://janesmith.academia.edu}"
+                    [ Para
+                        [ RawInline (Format "latex") "\\homepage{"
+                        , Str "https://janesmith.academia.edu"
+                        , RawInline (Format "latex") "}"
+                        ]
                     ]
                 , MetaBlocks
-                    [ RawBlock (Format "latex") "\\photo{profile.jpg}" ]
+                    [ Para
+                        [ RawInline (Format "latex") "\\photo{"
+                        , Str "profile.jpg"
+                        , RawInline (Format "latex") "}"
+                        ]
+                    ]
                 , MetaBlocks
-                    [ RawBlock
-                        (Format "latex")
-                        "\\extrainfo{ORCID: 0000-0000-0000-0000}"
+                    [ Para
+                        [ RawInline (Format "latex") "\\extrainfo{"
+                        , Str "ORCID:"
+                        , Space
+                        , Str "0000-0000-0000-0000"
+                        , RawInline (Format "latex") "}"
+                        ]
                     ]
                 ]
             )
@@ -76,7 +124,13 @@ Pandoc
             , MetaInlines [ Str "https://janesmith.academia.edu" ]
             )
           , ( "name"
-            , MetaInlines [ Str "Dr.\160Jane" , Space , Str "Smith" ]
+            , MetaInlines
+                [ Emph [ Str "Dr." ]
+                , Space
+                , Str "Jane"
+                , Space
+                , Str "Smith"
+                ]
             )
           , ( "phone"
             , MetaInlines
@@ -99,27 +153,122 @@ Pandoc
       1
       ( "academic-positions" , [] , [] )
       [ Str "Academic" , Space , Str "Positions" ]
-  , RawBlock
-      (Format "latex")
-      "\\cvitem{2020-present}{Associate Professor, Department of Mathematics University of Excellence}"
-  , RawBlock
-      (Format "latex")
-      "\\cvitem{2015-2020}{Assistant Professor, Department of Mathematics University of Technology}"
+  , Para
+      [ RawInline (Format "latex") "\\cvitem{2020-present}{"
+      , Strong [ Str "Associate" , Space , Str "Professor," ]
+      , Space
+      , Str "Department"
+      , Space
+      , Str "of"
+      , Space
+      , Str "Mathematics"
+      , SoftBreak
+      , Str "University"
+      , Space
+      , Str "of"
+      , Space
+      , Str "Excellence"
+      , RawInline (Format "latex") "}"
+      ]
+  , Para
+      [ RawInline (Format "latex") "\\cvitem{2015-2020}{"
+      , Strong [ Str "Assistant" , Space , Str "Professor," ]
+      , Space
+      , Str "Department"
+      , Space
+      , Str "of"
+      , Space
+      , Str "Mathematics"
+      , SoftBreak
+      , Str "University"
+      , Space
+      , Str "of"
+      , Space
+      , Str "Technology"
+      , RawInline (Format "latex") "}"
+      ]
   , Header 1 ( "education" , [] , [] ) [ Str "Education" ]
-  , RawBlock
-      (Format "latex")
-      "\\cvitem{2015}{PhD in Mathematics, Institute of Advanced Studies Dissertation: \8220Complex Analysis in Modern Applications\8221}"
-  , RawBlock
-      (Format "latex")
-      "\\cvitem{2010}{MSc in Mathematics, State University}"
+  , Para
+      [ RawInline (Format "latex") "\\cvitem{2015}{"
+      , Str "PhD"
+      , Space
+      , Str "in"
+      , Space
+      , Str "Mathematics,"
+      , Space
+      , Str "Institute"
+      , Space
+      , Str "of"
+      , Space
+      , Str "Advanced"
+      , Space
+      , Str "Studies"
+      , SoftBreak
+      , Str "Dissertation:"
+      , Space
+      , Quoted
+          DoubleQuote
+          [ Str "Complex"
+          , Space
+          , Str "Analysis"
+          , Space
+          , Str "in"
+          , Space
+          , Str "Modern"
+          , Space
+          , Str "Applications"
+          ]
+      , RawInline (Format "latex") "}"
+      ]
+  , Para
+      [ RawInline (Format "latex") "\\cvitem{2010}{"
+      , Str "MSc"
+      , Space
+      , Str "in"
+      , Space
+      , Str "Mathematics,"
+      , Space
+      , Str "State"
+      , Space
+      , Str "University"
+      , RawInline (Format "latex") "}"
+      ]
   , Header
       1
       ( "research-interests" , [] , [] )
       [ Str "Research" , Space , Str "Interests" ]
-  , RawBlock
-      (Format "latex")
-      "\\cvitem{Mathematical Analysis}{Focus on complex analysis and functional analysis}"
-  , RawBlock
-      (Format "latex")
-      "\\cvitem{Computational Mathematics}{Numerical methods for partial differential equations}"
+  , Para
+      [ RawInline
+          (Format "latex") "\\cvitem{Mathematical Analysis}{"
+      , Str "Focus"
+      , Space
+      , Str "on"
+      , Space
+      , Str "complex"
+      , Space
+      , Str "analysis"
+      , Space
+      , Str "and"
+      , Space
+      , Str "functional"
+      , Space
+      , Str "analysis"
+      , RawInline (Format "latex") "}"
+      ]
+  , Para
+      [ RawInline
+          (Format "latex") "\\cvitem{Computational Mathematics}{"
+      , Str "Numerical"
+      , Space
+      , Str "methods"
+      , Space
+      , Str "for"
+      , Space
+      , Str "partial"
+      , Space
+      , Str "differential"
+      , Space
+      , Str "equations"
+      , RawInline (Format "latex") "}"
+      ]
   ]

@@ -20,26 +20,51 @@ local function convert_to_moderncv(doc)
   table.insert(header_includes, pandoc.RawBlock('latex', '\\moderncvcolor{blue}'))
 
   -- Helper function to add meta fields to header_includes
-  local function add_meta_field(field_name, latex_command)
+  -- This preserves markdown formatting by creating inline sequences
+  local function add_meta_field(field_name, latex_command, extra_suffix)
     latex_command = latex_command or field_name  -- Use field_name as default
+    extra_suffix = extra_suffix or ""  -- Default to empty string
+
     if meta[field_name] then
-      local field_str = pandoc.utils.stringify(meta[field_name])
-      if field_str and field_str ~= "" then
-        table.insert(header_includes, pandoc.RawBlock('latex', '\\' .. latex_command .. '{' .. field_str .. '}'))
+      local field_content = meta[field_name]
+      if field_content then
+        -- Convert meta content to inlines if it's not already
+        local inlines
+        if field_content.t == 'MetaInlines' then
+          inlines = field_content
+        elseif field_content.t == 'MetaString' then
+          inlines = pandoc.Inlines{pandoc.Str(field_content)}
+        elseif type(field_content) == 'table' and #field_content > 0 and field_content[1].t then
+          -- This is likely a list of inlines (MetaInlines without .t field)
+          inlines = field_content
+        else
+          -- For other types, try to stringify but this loses formatting
+          local str = pandoc.utils.stringify(field_content)
+          if str and str ~= "" then
+            inlines = pandoc.Inlines{pandoc.Str(str)}
+          end
+        end
+
+        if inlines and #inlines > 0 then
+          -- Create a paragraph with the LaTeX command structure
+          local content = {
+            pandoc.RawInline('latex', '\\' .. latex_command .. '{')
+          }
+          -- Add the formatted content
+          for _, inline in ipairs(inlines) do
+            table.insert(content, inline)
+          end
+          table.insert(content, pandoc.RawInline('latex', '}' .. extra_suffix))
+
+          -- Add as a paragraph block
+          table.insert(header_includes, pandoc.Para(content))
+        end
       end
     end
   end
 
   -- Add personal information from metadata
-  -- Special case for name which has empty second parameter
-  if meta.name then
-    local name_str = pandoc.utils.stringify(meta.name)
-    if name_str and name_str ~= "" then
-      table.insert(header_includes, pandoc.RawBlock('latex', '\\name{' .. name_str .. '}{}'))
-    end
-  end
-
-  -- Add other meta fields (field name matches LaTeX command)
+  add_meta_field('name', 'name', '{}')  -- Special case: name command needs empty second parameter
   add_meta_field('title')
   add_meta_field('address')
   add_meta_field('phone')
@@ -88,24 +113,32 @@ local function convert_definition_lists(elem)
       local term = item[1]  -- The term (e.g., date range)
       local definitions = item[2]  -- List of definitions
 
-      -- Convert term to string
-      local term_str = pandoc.utils.stringify(term)
-
       -- Process each definition
       for _, def in ipairs(definitions) do
-        -- Convert definition blocks to string
-        local def_str = ""
+        -- Create paragraph with cvitem structure that preserves formatting
+        local content = {
+          pandoc.RawInline('latex', '\\cvitem{' .. pandoc.utils.stringify(term) .. '}{')
+        }
+
+        -- Add the formatted definition content
         for _, block in ipairs(def) do
-          if block.t == 'Para' then
-            def_str = def_str .. pandoc.utils.stringify(block.content)
+          if block.t == 'Para' or block.t == 'Plain' then
+            -- Add the paragraph/plain content as inlines
+            for _, inline in ipairs(block.content) do
+              table.insert(content, inline)
+            end
           else
-            def_str = def_str .. pandoc.utils.stringify(block)
+            -- For other block types, convert to inlines if possible
+            -- This is a simplified approach - could be enhanced for other block types
+            local str = pandoc.utils.stringify(block)
+            if str and str ~= "" then
+              table.insert(content, pandoc.Str(str))
+            end
           end
         end
 
-        -- Create cvitem command
-        local cvitem = '\\cvitem{' .. term_str .. '}{' .. def_str .. '}'
-        table.insert(new_blocks, pandoc.RawBlock('latex', cvitem))
+        table.insert(content, pandoc.RawInline('latex', '}'))
+        table.insert(new_blocks, pandoc.Para(content))
       end
     end
 

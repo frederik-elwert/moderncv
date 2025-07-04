@@ -1,22 +1,22 @@
 ---
-name: "Dr. Jane Smith"
-title: "Curriculum Vitae"
-address: "456 Research Blvd, Academic City, AC 12345"
-phone: "+1 555 123 4567"
-email: "jane.smith@university.edu"
-homepage: "https://janesmith.academia.edu"
-photo: "profile.jpg"
+name: _Dr._ Jane Smith
+title: Curriculum Vitae
+address: 456 Research Blvd, Academic City, AC 12345
+phone: +1 555 123 4567
+email: jane.smith@university.edu
+homepage: https://janesmith.academia.edu
+photo: profile.jpg
 extrainfo: "ORCID: 0000-0000-0000-0000"
 ---
 
 # Academic Positions
 
 2020-present
-:   Associate Professor, Department of Mathematics
+:   **Associate Professor,** Department of Mathematics
     University of Excellence
 
 2015-2020
-:   Assistant Professor, Department of Mathematics
+:   **Assistant Professor,** Department of Mathematics
     University of Technology
 
 # Education
