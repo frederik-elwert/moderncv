@@ -30,6 +30,7 @@ local function convert_to_moderncv(doc)
 
   -- Helper function to add meta fields to header_includes
   -- This preserves markdown formatting by creating inline sequences
+  -- Supports both single values and lists for multi-parameter commands
   local function add_meta_field(field_name, latex_command, extra_suffix)
     latex_command = latex_command or field_name  -- Use field_name as default
     extra_suffix = extra_suffix or ""  -- Default to empty string
@@ -37,36 +38,78 @@ local function convert_to_moderncv(doc)
     if meta[field_name] then
       local field_content = meta[field_name]
       if field_content then
-        -- Convert meta content to inlines if it's not already
-        local inlines
-        if field_content.t == 'MetaInlines' then
-          inlines = field_content
-        elseif field_content.t == 'MetaString' then
-          inlines = pandoc.Inlines{pandoc.Str(field_content)}
-        elseif type(field_content) == 'table' and #field_content > 0 and field_content[1].t then
-          -- This is likely a list of inlines (MetaInlines without .t field)
-          inlines = field_content
-        else
-          -- For other types, try to stringify but this loses formatting
-          local str = pandoc.utils.stringify(field_content)
-          if str and str ~= "" then
-            inlines = pandoc.Inlines{pandoc.Str(str)}
-          end
-        end
-
-        if inlines and #inlines > 0 then
-          -- Create a paragraph with the LaTeX command structure
+        -- Check if this is a MetaList (YAML list)
+        -- MetaList appears as table without .t field, where each item is also a table
+        if not field_content.t and type(field_content) == 'table' and #field_content > 1 and
+           type(field_content[1]) == 'table' and not field_content[1].t then
+          -- Handle list of parameters
           local content = {
-            pandoc.RawInline('latex', '\\' .. latex_command .. '{')
+            pandoc.RawInline('latex', '\\' .. latex_command)
           }
-          -- Add the formatted content
-          for _, inline in ipairs(inlines) do
-            table.insert(content, inline)
+          
+          -- Add each list item as a separate {parameter}
+          for _, item in ipairs(field_content) do
+            table.insert(content, pandoc.RawInline('latex', '{'))
+            
+            -- Convert each item to inlines
+            local item_inlines
+            if item.t == 'MetaInlines' then
+              item_inlines = item
+            elseif item.t == 'MetaString' then
+              item_inlines = pandoc.Inlines{pandoc.Str(item)}
+            elseif type(item) == 'table' and #item > 0 and item[1].t then
+              item_inlines = item
+            else
+              local str = pandoc.utils.stringify(item)
+              if str and str ~= "" then
+                item_inlines = pandoc.Inlines{pandoc.Str(str)}
+              end
+            end
+            
+            -- Add the item content
+            if item_inlines then
+              for _, inline in ipairs(item_inlines) do
+                table.insert(content, inline)
+              end
+            end
+            
+            table.insert(content, pandoc.RawInline('latex', '}'))
           end
-          table.insert(content, pandoc.RawInline('latex', '}' .. extra_suffix))
-
-          -- Add as a paragraph block
+          
+          table.insert(content, pandoc.RawInline('latex', extra_suffix))
           table.insert(header_includes, pandoc.Para(content))
+        else
+          -- Handle single value (existing logic)
+          local inlines
+          if field_content.t == 'MetaInlines' then
+            inlines = field_content
+          elseif field_content.t == 'MetaString' then
+            inlines = pandoc.Inlines{pandoc.Str(field_content)}
+          elseif type(field_content) == 'table' and #field_content > 0 and field_content[1].t then
+            -- This is likely a list of inlines (MetaInlines without .t field)
+            inlines = field_content
+          else
+            -- For other types, try to stringify but this loses formatting
+            local str = pandoc.utils.stringify(field_content)
+            if str and str ~= "" then
+              inlines = pandoc.Inlines{pandoc.Str(str)}
+            end
+          end
+
+          if inlines and #inlines > 0 then
+            -- Create a paragraph with the LaTeX command structure
+            local content = {
+              pandoc.RawInline('latex', '\\' .. latex_command .. '{')
+            }
+            -- Add the formatted content
+            for _, inline in ipairs(inlines) do
+              table.insert(content, inline)
+            end
+            table.insert(content, pandoc.RawInline('latex', '}' .. extra_suffix))
+
+            -- Add as a paragraph block
+            table.insert(header_includes, pandoc.Para(content))
+          end
         end
       end
     end

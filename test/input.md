@@ -1,7 +1,10 @@
 ---
 name: _Dr._ Jane Smith
 title: Curriculum Vitae
-address: 456 Research Blvd, Academic City, AC 12345
+address:
+    - 456 Research Blvd
+    - Academic City
+    - AC 12345
 phone: +1 555 123 4567
 email: jane.smith@university.edu
 homepage: https://janesmith.academia.edu

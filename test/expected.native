@@ -3,20 +3,16 @@ Pandoc
     { unMeta =
         fromList
           [ ( "address"
-            , MetaInlines
-                [ Str "456"
-                , Space
-                , Str "Research"
-                , Space
-                , Str "Blvd,"
-                , Space
-                , Str "Academic"
-                , Space
-                , Str "City,"
-                , Space
-                , Str "AC"
-                , Space
-                , Str "12345"
+            , MetaList
+                [ MetaInlines
+                    [ Str "456"
+                    , Space
+                    , Str "Research"
+                    , Space
+                    , Str "Blvd"
+                    ]
+                , MetaInlines [ Str "Academic" , Space , Str "City" ]
+                , MetaInlines [ Str "AC" , Space , Str "12345" ]
                 ]
             )
           , ( "cvcolor" , MetaInlines [ Str "green" ] )
@@ -64,21 +60,25 @@ Pandoc
                     ]
                 , MetaBlocks
                     [ Para
-                        [ RawInline (Format "latex") "\\address{"
+                        [ RawInline (Format "latex") "\\address"
+                        , RawInline (Format "latex") "{"
                         , Str "456"
                         , Space
                         , Str "Research"
                         , Space
-                        , Str "Blvd,"
-                        , Space
+                        , Str "Blvd"
+                        , RawInline (Format "latex") "}"
+                        , RawInline (Format "latex") "{"
                         , Str "Academic"
                         , Space
-                        , Str "City,"
-                        , Space
+                        , Str "City"
+                        , RawInline (Format "latex") "}"
+                        , RawInline (Format "latex") "{"
                         , Str "AC"
                         , Space
                         , Str "12345"
                         , RawInline (Format "latex") "}"
+                        , RawInline (Format "latex") ""
                         ]
                     ]
                 , MetaBlocks
