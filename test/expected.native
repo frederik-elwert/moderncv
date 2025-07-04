@@ -20,10 +20,6 @@ Pandoc
           , ( "email"
             , MetaInlines [ Str "jane.smith@university.edu" ]
             )
-          , ( "extrainfo"
-            , MetaInlines
-                [ Str "ORCID:" , Space , Str "0000-0000-0000-0000" ]
-            )
           , ( "header-includes"
             , MetaList
                 [ MetaBlocks
@@ -110,17 +106,15 @@ Pandoc
                     ]
                 , MetaBlocks
                     [ Para
-                        [ RawInline (Format "latex") "\\photo{"
-                        , Str "profile.jpg"
-                        , RawInline (Format "latex") "}"
+                        [ RawInline
+                            (Format "latex")
+                            "\\social[orcid]{0000-0000-0000-0000}"
                         ]
                     ]
                 , MetaBlocks
                     [ Para
-                        [ RawInline (Format "latex") "\\extrainfo{"
-                        , Str "ORCID:"
-                        , Space
-                        , Str "0000-0000-0000-0000"
+                        [ RawInline (Format "latex") "\\photo{"
+                        , Str "profile.jpg"
                         , RawInline (Format "latex") "}"
                         ]
                     ]
@@ -150,6 +144,14 @@ Pandoc
                 ]
             )
           , ( "photo" , MetaInlines [ Str "profile.jpg" ] )
+          , ( "social"
+            , MetaMap
+                (fromList
+                   [ ( "orcid"
+                     , MetaInlines [ Str "0000-0000-0000-0000" ]
+                     )
+                   ])
+            )
           , ( "title"
             , MetaInlines [ Str "Curriculum" , Space , Str "Vitae" ]
             )

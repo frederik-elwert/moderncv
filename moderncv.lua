@@ -115,14 +115,70 @@ local function convert_to_moderncv(doc)
     end
   end
 
+  -- Helper function to handle fields with optional parameters (phone and social)
+  local function add_optional_param_field(field_name, latex_command)
+    latex_command = latex_command or field_name  -- Use field_name as default
+    
+    if meta[field_name] then
+      local field_content = meta[field_name]
+      if field_content then
+        -- Check if this is a YAML mapping (for multiple entries with different types/platforms)
+        if not field_content.t and type(field_content) == 'table' and not field_content[1] then
+          -- Handle as YAML mapping (e.g., phone: {mobile: "123", fixed: "456"})
+          for param_type, value in pairs(field_content) do
+            if value then
+              local value_str = pandoc.utils.stringify(value)
+              if value_str and value_str ~= "" then
+                local content = {
+                  pandoc.RawInline('latex', '\\' .. latex_command .. '[' .. param_type .. ']{' .. value_str .. '}')
+                }
+                table.insert(header_includes, pandoc.Para(content))
+              end
+            end
+          end
+        else
+          -- Handle as single value (fallback for backwards compatibility)
+          local inlines
+          if field_content.t == 'MetaInlines' then
+            inlines = field_content
+          elseif field_content.t == 'MetaString' then
+            inlines = pandoc.Inlines{pandoc.Str(field_content)}
+          elseif type(field_content) == 'table' and #field_content > 0 and field_content[1].t then
+            inlines = field_content
+          else
+            local str = pandoc.utils.stringify(field_content)
+            if str and str ~= "" then
+              inlines = pandoc.Inlines{pandoc.Str(str)}
+            end
+          end
+          
+          if inlines and #inlines > 0 then
+            local content = {
+              pandoc.RawInline('latex', '\\' .. latex_command .. '{')
+            }
+            for _, inline in ipairs(inlines) do
+              table.insert(content, inline)
+            end
+            table.insert(content, pandoc.RawInline('latex', '}'))
+            
+            table.insert(header_includes, pandoc.Para(content))
+          end
+        end
+      end
+    end
+  end
+
   -- Add personal information from metadata
   add_meta_field('name', 'name', '{}')  -- Special case: name command needs empty second parameter
   add_meta_field('title')
+  add_meta_field('born')
   add_meta_field('address')
-  add_meta_field('phone')
+  add_optional_param_field('phone')  -- Supports both single value and mapping
   add_meta_field('email')
   add_meta_field('homepage')
+  add_optional_param_field('social')  -- Supports YAML mapping
   add_meta_field('photo')
+  add_meta_field('quote')
   add_meta_field('extrainfo')
 
   -- Add header-includes to metadata
