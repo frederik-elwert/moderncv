@@ -2,75 +2,124 @@ Pandoc
   Meta
     { unMeta =
         fromList
-          [ ( "author" , MetaInlines [ Str "Nullus" ] )
-          , ( "subtitle"
-            , MetaInlines [ Str "Lorem" , Space , Str "ipsum" ]
+          [ ( "address"
+            , MetaInlines
+                [ Str "456"
+                , Space
+                , Str "Research"
+                , Space
+                , Str "Blvd,"
+                , Space
+                , Str "Academic"
+                , Space
+                , Str "City,"
+                , Space
+                , Str "AC"
+                , Space
+                , Str "12345"
+                ]
             )
-          , ( "title" , MetaInlines [ Str "Greetings!" ] )
+          , ( "documentclass" , MetaString "moderncv" )
+          , ( "email"
+            , MetaInlines [ Str "jane.smith@university.edu" ]
+            )
+          , ( "extrainfo"
+            , MetaInlines
+                [ Str "ORCID:" , Space , Str "0000-0000-0000-0000" ]
+            )
+          , ( "header-includes"
+            , MetaList
+                [ MetaBlocks
+                    [ RawBlock
+                        (Format "latex") "\\moderncvstyle{classic}"
+                    ]
+                , MetaBlocks
+                    [ RawBlock (Format "latex") "\\moderncvcolor{blue}"
+                    ]
+                , MetaBlocks
+                    [ RawBlock
+                        (Format "latex") "\\name{Dr.\160Jane Smith}{}"
+                    ]
+                , MetaBlocks
+                    [ RawBlock
+                        (Format "latex") "\\title{Curriculum Vitae}"
+                    ]
+                , MetaBlocks
+                    [ RawBlock
+                        (Format "latex")
+                        "\\address{456 Research Blvd, Academic City, AC 12345}"
+                    ]
+                , MetaBlocks
+                    [ RawBlock
+                        (Format "latex") "\\phone{+1 555 123 4567}"
+                    ]
+                , MetaBlocks
+                    [ RawBlock
+                        (Format "latex")
+                        "\\email{jane.smith@university.edu}"
+                    ]
+                , MetaBlocks
+                    [ RawBlock
+                        (Format "latex")
+                        "\\homepage{https://janesmith.academia.edu}"
+                    ]
+                , MetaBlocks
+                    [ RawBlock (Format "latex") "\\photo{profile.jpg}" ]
+                , MetaBlocks
+                    [ RawBlock
+                        (Format "latex")
+                        "\\extrainfo{ORCID: 0000-0000-0000-0000}"
+                    ]
+                ]
+            )
+          , ( "homepage"
+            , MetaInlines [ Str "https://janesmith.academia.edu" ]
+            )
+          , ( "name"
+            , MetaInlines [ Str "Dr.\160Jane" , Space , Str "Smith" ]
+            )
+          , ( "phone"
+            , MetaInlines
+                [ Str "+1"
+                , Space
+                , Str "555"
+                , Space
+                , Str "123"
+                , Space
+                , Str "4567"
+                ]
+            )
+          , ( "photo" , MetaInlines [ Str "profile.jpg" ] )
+          , ( "title"
+            , MetaInlines [ Str "Curriculum" , Space , Str "Vitae" ]
+            )
           ]
     }
-  [ Para
-      [ Str "Hello"
-      , Space
-      , Str "from"
-      , Space
-      , Str "the"
-      , Space
-      , Str "Lua"
-      , Space
-      , Str "filter!"
-      ]
-  , Para
-      [ Str "Lorem"
-      , Space
-      , Str "ipsum"
-      , Space
-      , Str "dolor"
-      , Space
-      , Str "sit"
-      , Space
-      , Str "amet,"
-      , Space
-      , Str "consectetuer"
-      , Space
-      , Str "adipiscing"
-      , Space
-      , Str "elit."
-      , Space
-      , Str "Donec"
-      , SoftBreak
-      , Str "hendrerit"
-      , Space
-      , Str "tempor"
-      , Space
-      , Str "tellus."
-      , Space
-      , Str "Donec"
-      , Space
-      , Str "pretium"
-      , Space
-      , Str "posuere"
-      , Space
-      , Str "tellus."
-      , Space
-      , Str "Proin"
-      , Space
-      , Str "quam"
-      , SoftBreak
-      , Str "nisl,"
-      , Space
-      , Str "tincidunt"
-      , Space
-      , Str "et,"
-      , Space
-      , Str "mattis"
-      , Space
-      , Str "eget,"
-      , Space
-      , Str "convallis"
-      , Space
-      , Str "nec,"
-      , Space
-      , Str "purus."
-      ]
+  [ Header
+      1
+      ( "academic-positions" , [] , [] )
+      [ Str "Academic" , Space , Str "Positions" ]
+  , RawBlock
+      (Format "latex")
+      "\\cvitem{2020-present}{Associate Professor, Department of Mathematics University of Excellence}"
+  , RawBlock
+      (Format "latex")
+      "\\cvitem{2015-2020}{Assistant Professor, Department of Mathematics University of Technology}"
+  , Header 1 ( "education" , [] , [] ) [ Str "Education" ]
+  , RawBlock
+      (Format "latex")
+      "\\cvitem{2015}{PhD in Mathematics, Institute of Advanced Studies Dissertation: \8220Complex Analysis in Modern Applications\8221}"
+  , RawBlock
+      (Format "latex")
+      "\\cvitem{2010}{MSc in Mathematics, State University}"
+  , Header
+      1
+      ( "research-interests" , [] , [] )
+      [ Str "Research" , Space , Str "Interests" ]
+  , RawBlock
+      (Format "latex")
+      "\\cvitem{Mathematical Analysis}{Focus on complex analysis and functional analysis}"
+  , RawBlock
+      (Format "latex")
+      "\\cvitem{Computational Mathematics}{Numerical methods for partial differential equations}"
   ]
