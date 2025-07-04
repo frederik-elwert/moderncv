@@ -19,6 +19,7 @@ Pandoc
                 , Str "12345"
                 ]
             )
+          , ( "cvcolor" , MetaInlines [ Str "green" ] )
           , ( "documentclass" , MetaString "moderncv" )
           , ( "email"
             , MetaInlines [ Str "jane.smith@university.edu" ]
@@ -31,10 +32,15 @@ Pandoc
             , MetaList
                 [ MetaBlocks
                     [ RawBlock
+                        (Format "latex")
+                        "\\usepackage[scale=0.75]{geometry}\n\\AtBeginDocument{\\recomputelengths}\n"
+                    ]
+                , MetaBlocks
+                    [ RawBlock
                         (Format "latex") "\\moderncvstyle{classic}"
                     ]
                 , MetaBlocks
-                    [ RawBlock (Format "latex") "\\moderncvcolor{blue}"
+                    [ RawBlock (Format "latex") "\\moderncvcolor{green}"
                     ]
                 , MetaBlocks
                     [ Para

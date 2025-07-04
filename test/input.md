@@ -7,6 +7,7 @@ email: jane.smith@university.edu
 homepage: https://janesmith.academia.edu
 photo: profile.jpg
 extrainfo: "ORCID: 0000-0000-0000-0000"
+cvcolor: green
 ---
 
 # Academic Positions

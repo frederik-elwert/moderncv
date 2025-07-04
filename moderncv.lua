@@ -21,9 +21,12 @@ local function convert_to_moderncv(doc)
 \AtBeginDocument{\recomputelengths}
 ]]))
 
-  -- Add moderncv theme and color setup
-  table.insert(header_includes, pandoc.RawBlock('latex', '\\moderncvstyle{classic}'))
-  table.insert(header_includes, pandoc.RawBlock('latex', '\\moderncvcolor{blue}'))
+  -- Add moderncv theme and color setup with configurable options
+  local cv_style = meta.cvstyle and pandoc.utils.stringify(meta.cvstyle) or "classic"
+  local cv_color = meta.cvcolor and pandoc.utils.stringify(meta.cvcolor) or "blue"
+
+  table.insert(header_includes, pandoc.RawBlock('latex', '\\moderncvstyle{' .. cv_style .. '}'))
+  table.insert(header_includes, pandoc.RawBlock('latex', '\\moderncvcolor{' .. cv_color .. '}'))
 
   -- Helper function to add meta fields to header_includes
   -- This preserves markdown formatting by creating inline sequences
