@@ -100,7 +100,7 @@ Pandoc
                 , MetaBlocks
                     [ Para
                         [ RawInline (Format "latex") "\\homepage{"
-                        , Str "https://janesmith.academia.edu"
+                        , Str "https://janesmith.me"
                         , RawInline (Format "latex") "}"
                         ]
                     ]
@@ -121,7 +121,7 @@ Pandoc
                 ]
             )
           , ( "homepage"
-            , MetaInlines [ Str "https://janesmith.academia.edu" ]
+            , MetaInlines [ Str "https://janesmith.me" ]
             )
           , ( "name"
             , MetaInlines

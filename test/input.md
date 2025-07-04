@@ -7,7 +7,7 @@ address:
     - AC 12345
 phone: +1 555 123 4567
 email: jane.smith@university.edu
-homepage: https://janesmith.academia.edu
+homepage: https://janesmith.me
 photo: profile.jpg
 social:
     orcid: 0000-0000-0000-0000
