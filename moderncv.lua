@@ -15,6 +15,12 @@ local function convert_to_moderncv(doc)
   -- Build moderncv preamble
   local header_includes = {}
 
+  -- Add default settings
+  table.insert(header_includes, pandoc.RawBlock('latex', [[
+\usepackage[scale=0.75]{geometry}
+\AtBeginDocument{\recomputelengths}
+]]))
+
   -- Add moderncv theme and color setup
   table.insert(header_includes, pandoc.RawBlock('latex', '\\moderncvstyle{classic}'))
   table.insert(header_includes, pandoc.RawBlock('latex', '\\moderncvcolor{blue}'))
