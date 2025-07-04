@@ -19,46 +19,34 @@ local function convert_to_moderncv(doc)
   table.insert(header_includes, pandoc.RawBlock('latex', '\\moderncvstyle{classic}'))
   table.insert(header_includes, pandoc.RawBlock('latex', '\\moderncvcolor{blue}'))
 
+  -- Helper function to add meta fields to header_includes
+  local function add_meta_field(field_name, latex_command)
+    latex_command = latex_command or field_name  -- Use field_name as default
+    if meta[field_name] then
+      local field_str = pandoc.utils.stringify(meta[field_name])
+      if field_str and field_str ~= "" then
+        table.insert(header_includes, pandoc.RawBlock('latex', '\\' .. latex_command .. '{' .. field_str .. '}'))
+      end
+    end
+  end
+
   -- Add personal information from metadata
+  -- Special case for name which has empty second parameter
   if meta.name then
     local name_str = pandoc.utils.stringify(meta.name)
-    table.insert(header_includes, pandoc.RawBlock('latex', '\\name{' .. name_str .. '}{}'))
+    if name_str and name_str ~= "" then
+      table.insert(header_includes, pandoc.RawBlock('latex', '\\name{' .. name_str .. '}{}'))
+    end
   end
 
-  if meta.title then
-    local title_str = pandoc.utils.stringify(meta.title)
-    table.insert(header_includes, pandoc.RawBlock('latex', '\\title{' .. title_str .. '}'))
-  end
-
-  if meta.address then
-    local address_str = pandoc.utils.stringify(meta.address)
-    table.insert(header_includes, pandoc.RawBlock('latex', '\\address{' .. address_str .. '}'))
-  end
-
-  if meta.phone then
-    local phone_str = pandoc.utils.stringify(meta.phone)
-    table.insert(header_includes, pandoc.RawBlock('latex', '\\phone{' .. phone_str .. '}'))
-  end
-
-  if meta.email then
-    local email_str = pandoc.utils.stringify(meta.email)
-    table.insert(header_includes, pandoc.RawBlock('latex', '\\email{' .. email_str .. '}'))
-  end
-
-  if meta.homepage then
-    local homepage_str = pandoc.utils.stringify(meta.homepage)
-    table.insert(header_includes, pandoc.RawBlock('latex', '\\homepage{' .. homepage_str .. '}'))
-  end
-
-  if meta.photo then
-    local photo_str = pandoc.utils.stringify(meta.photo)
-    table.insert(header_includes, pandoc.RawBlock('latex', '\\photo{' .. photo_str .. '}'))
-  end
-
-  if meta.extrainfo then
-    local extrainfo_str = pandoc.utils.stringify(meta.extrainfo)
-    table.insert(header_includes, pandoc.RawBlock('latex', '\\extrainfo{' .. extrainfo_str .. '}'))
-  end
+  -- Add other meta fields (field name matches LaTeX command)
+  add_meta_field('title')
+  add_meta_field('address')
+  add_meta_field('phone')
+  add_meta_field('email')
+  add_meta_field('homepage')
+  add_meta_field('photo')
+  add_meta_field('extrainfo')
 
   -- Add header-includes to metadata
   if meta['header-includes'] then
